@@ -1,0 +1,23 @@
+all: client server
+
+client: client.o tcp.o
+	g++ tcp.o client.o -o client -pthread
+server: server.o tcp.o
+	g++ tcp.o server.o -o server -pthread
+	
+client.o: client.cpp tcp.hh m.hh
+	g++ -c client.cpp -std=c++14
+server.o: server.cpp tcp.hh m.hh
+	g++ -c server.cpp -std=c++14
+
+tcp.o: tcp.cpp tcp.hh
+	g++ -c tcp.cpp -std=c++14
+
+debug: _client _server
+_client: client.cpp tcp.cpp tcp.hh m.hh
+	g++ -g tcp.cpp client.cpp -o _client -std=c++14 -pthread
+_server: server.cpp tcp.cpp tcp.hh m.hh
+	g++ -g tcp.cpp server.cpp -o _server -std=c++14 -pthread
+
+clean:
+	rm *.o server client
